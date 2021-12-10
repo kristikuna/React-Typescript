@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react';
 import { ITask } from './Interfaces';
+import TodoTask from './components/TodoTask';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -8,11 +9,10 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import AlarmIcon from '@mui/icons-material/Alarm';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { deepPurple } from '@mui/material/colors';
 
 
 function Copyright(props: any) {
@@ -50,15 +50,19 @@ export default function App() {
       deadline: deadline
     }
     setTodoList([...todoList, newTask]);
-    console.log(todoList)
     setTask('')
     setDeadline(0)
+  }
+
+  const completeTask = (taskToComplete: string):void  => {
+    setTodoList(todoList.filter((task) => {
+      return task.taskName !== taskToComplete
+    }))
   }
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
   //   const data = new FormData(event.currentTarget);
-  //   // eslint-disable-next-line no-console
   //   console.log({
   //     task: data.get('task'),
   //     deadline: data.get('deadline'),
@@ -77,10 +81,10 @@ export default function App() {
             alignItems: 'center',
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
-          <Avatar sx={{ bgcolor: deepPurple[500] }}>KB</Avatar>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <AlarmIcon />
+          </Avatar>
+          {/* <Avatar sx={{ bgcolor: deepPurple[500] }}>KB</Avatar> */}
 
           {/* <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}> */}
           <Box component="form" noValidate sx={{ mt: 3 }}>
@@ -120,7 +124,11 @@ export default function App() {
             </Button>
           </Box>
         </Box>
-        <Box></Box>
+        <Box>
+          {todoList.map((task: ITask, key: number) => {
+            return <TodoTask completeTask={completeTask} key={key} task={task}/>;
+          })}
+        </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
